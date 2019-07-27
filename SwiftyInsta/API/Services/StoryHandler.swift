@@ -3,107 +3,78 @@
 //  SwiftyInsta
 //
 //  Created by Mahdi on 11/26/18.
+//  V. 2.0 by Stefano Bertagno on 7/21/19.
 //  Copyright © 2018 Mahdi. All rights reserved.
 //
 
 import Foundation
 
-public protocol StoryHandlerProtocol {
-    func getStoryFeed(completion: @escaping (Result<StoryFeedModel>) -> ()) throws
-    func getUserStory(userId: Int, completion: @escaping (Result<TrayModel>) -> ()) throws
-    func getUserStoryReelFeed(userId: Int, completion: @escaping (Result<StoryReelFeedModel>) -> ()) throws
-    func uploadStoryPhoto(photo: InstaPhoto, completion: @escaping (Result<UploadPhotoResponse>) -> ()) throws
-    func getStoryViewers(storyPk: String,
-                         paginationParameters: PaginationParameters,
-                         updateHandler: PaginationResponse<StoryViewers>?,
-                         completionHandler: @escaping PaginationResponse<Result<[StoryViewers]>>) throws
-    func getStoryHighlights(userPk: Int, completion: @escaping (Result<StoryHighlights>) -> ()) throws
-    func markStoriesAsSeen(items: [TrayItems], sourceId: String?, completion: @escaping (Result<Bool>) -> ()) throws
-    /**
-     You can decode `Data` using `JSONDecoder`, it's the returned data from server.
-     */
-    func getReelsMediaFeed(feedList: [String], completion: @escaping (Result<StoryReelsFeedModel>, Data?) -> ()) throws
-    func getStoryArchive(completion: @escaping (Result<StoryArchiveFeedModel>) -> ()) throws
-}
+public class StoryHandler: Handler {
+    /// Get the story feed.
+    public func tray(completionHandler: @escaping (Result<StoryFeedModel, Error>) -> Void) {
+        requests.decodeAsync(StoryFeedModel.self,
+                             method: .get,
+                             url: URLs.getStoryFeedUrl(),
+                             completionHandler: completionHandler)
+    }
 
-class StoryHandler: StoryHandlerProtocol {
-    static let shared = StoryHandler()
-    
-    private init() {
-        
-    }
-    
-    func getStoryFeed(completion: @escaping (Result<StoryFeedModel>) -> ()) throws {
-        guard let httpHelper = HandlerSettings.shared.httpHelper else {return}
-        httpHelper.sendAsync(method: .get, url: try URLs.getStoryFeedUrl(), body: [:], header: [:]) { (data, response, error) in
-            if let error = error {
-                completion(Return.fail(error: error, response: .fail, value: nil))
-            } else {
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let value = try decoder.decode(StoryFeedModel.self, from: data)
-                        completion(Return.success(value: value))
-                    } catch {
-                        completion(Return.fail(error: error, response: .ok, value: nil))
-                    }
-                } else {
-                    let error = CustomErrors.unExpected("The data couldn’t be read because it is missing error when decoding JSON.")
-                    completion(Return.fail(error: error, response: .ok, value: nil))
+    /// Get user's stories.
+    public func by(user: UserReference, completionHandler: @escaping (Result<TrayModel, Error>) -> Void) {
+        switch user {
+        case .username:
+            // fetch username.
+            self.handler.users.user(user) { [weak self] in
+                guard let handler = self else {
+                    return completionHandler(.failure(CustomErrors.weakReferenceReleased))
+                }
+                switch $0 {
+                case .success(let user) where user?.pk != nil:
+                    handler.by(user: .pk(user!.pk!), completionHandler: completionHandler)
+                case .failure(let error): completionHandler(.failure(error))
+                default: completionHandler(.failure(CustomErrors.runTimeError("No user matching `username`.")))
                 }
             }
+        case .pk(let pk):
+            // load stories directly.
+            requests.decodeAsync(TrayModel.self,
+                                 method: .get,
+                                 url: URLs.getUserStoryUrl(userId: pk),
+                                 completionHandler: completionHandler)
         }
     }
-    
-    func getUserStory(userId: Int, completion: @escaping (Result<TrayModel>) -> ()) throws {
-        guard let httpHelper = HandlerSettings.shared.httpHelper else {return}
-        httpHelper.sendAsync(method: .get, url: try URLs.getUserStoryUrl(userId: userId), body: [:], header: [:]) { (data, response, error) in
-            if let error = error {
-                completion(Return.fail(error: error, response: .fail, value: nil))
-            } else {
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let value = try decoder.decode(TrayModel.self, from: data)
-                        completion(Return.success(value: value))
-                    } catch {
-                        completion(Return.fail(error: error, response: .ok, value: nil))
-                    }
-                } else {
-                    let error = CustomErrors.unExpected("The data couldn’t be read because it is missing error when decoding JSON.")
-                    completion(Return.fail(error: error, response: .ok, value: nil))
+
+    /// Get reel feed.
+    public func reelBy(user: UserReference, completionHandler: @escaping (Result<StoryReelFeedModel, Error>) -> Void) {
+        switch user {
+        case .username:
+            // fetch username.
+            self.handler.users.user(user) { [weak self] in
+                guard let handler = self else {
+                    return completionHandler(.failure(CustomErrors.weakReferenceReleased))
+                }
+                switch $0 {
+                case .success(let user) where user?.pk != nil:
+                    handler.reelBy(user: .pk(user!.pk!), completionHandler: completionHandler)
+                case .failure(let error): completionHandler(.failure(error))
+                default: completionHandler(.failure(CustomErrors.runTimeError("No user matching `username`.")))
                 }
             }
+        case .pk(let pk):
+            // load stories directly.
+            requests.decodeAsync(StoryReelFeedModel.self,
+                                 method: .get,
+                                 url: URLs.getUserStoryFeed(userId: pk),
+                                 completionHandler: completionHandler)
         }
     }
-    
-    func getUserStoryReelFeed(userId: Int, completion: @escaping (Result<StoryReelFeedModel>) -> ()) throws {
-        guard let httpHelper = HandlerSettings.shared.httpHelper else {return}
-        httpHelper.sendAsync(method: .get, url: try URLs.getUserStoryFeed(userId: userId), body: [:], header: [:]) { (data, response, error) in
-            if let error = error {
-                completion(Return.fail(error: error, response: .fail, value: nil))
-            } else {
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let value = try decoder.decode(StoryReelFeedModel.self, from: data)
-                        completion(Return.success(value: value))
-                    } catch {
-                        completion(Return.fail(error: error, response: .ok, value: nil))
-                    }
-                } else {
-                    let error = CustomErrors.unExpected("The data couldn’t be read because it is missing error when decoding JSON.")
-                    completion(Return.fail(error: error, response: .ok, value: nil))
-                }
-            }
+
+    /// Upload photo.
+    public func upload(photo: InstaPhoto, completionHandler: @escaping (Result<UploadPhotoResponse, Error>) -> Void) {
+        guard let storage = handler.response?.cache?.storage else {
+            return completionHandler(.failure(CustomErrors.runTimeError("Invalid `SessionCache` in `APIHandler.respone`. Log in again.")))
         }
-    }
-    
-    func uploadStoryPhoto(photo: InstaPhoto, completion: @escaping (Result<UploadPhotoResponse>) -> ()) throws {
-        let uploadId = HandlerSettings.shared.request!.generateUploadId()
+        let uploadId = String(Date().millisecondsSince1970 / 1000)
+        // prepare content.
         var content = Data()
         content.append(string: "--\(uploadId)\n")
         content.append(string: "Content-Type: text/plain; charset=utf-8\n")
@@ -112,11 +83,11 @@ class StoryHandler: StoryHandlerProtocol {
         content.append(string: "--\(uploadId)\n")
         content.append(string: "Content-Type: text/plain; charset=utf-8\n")
         content.append(string: "Content-Disposition: form-data; name=\"_uuid\"\n\n")
-        content.append(string: "\(HandlerSettings.shared.device!.deviceGuid.uuidString)\n")
+        content.append(string: "\(handler!.settings.device.deviceGuid.uuidString)\n")
         content.append(string: "--\(uploadId)\n")
         content.append(string: "Content-Type: text/plain; charset=utf-8\n")
         content.append(string: "Content-Disposition: form-data; name=\"_csrftoken\"\n\n")
-        content.append(string: "\(HandlerSettings.shared.user!.csrfToken)\n")
+        content.append(string: "\(storage.csrfToken)\n")
         content.append(string: "--\(uploadId)\n")
         content.append(string: "Content-Type: text/plain; charset=utf-8\n")
         content.append(string: "Content-Disposition: form-data; name=\"image_compression\"\n\n")
@@ -124,226 +95,221 @@ class StoryHandler: StoryHandlerProtocol {
         content.append(string: "--\(uploadId)\n")
         content.append(string: "Content-Transfer-Encoding: binary\n")
         content.append(string: "Content-Type: application/octet-stream\n")
-        content.append(string: "Content-Disposition: form-data; name=photo; filename=pending_media_\(uploadId).jpg; filename*=utf-8''pending_media_\(uploadId).jpg\n\n")
-        
-        let imageData = photo.image.jpegData(compressionQuality: 1)
-        
+        content.append(string: ["Content-Disposition: form-data; name=photo;",
+                                "filename=pending_media_\(uploadId).jpg;",
+                                "filename*=utf-8''pending_media_\(uploadId).jpg\n\n"].joined(separator: " "))
+
+        #if os(macOS)
+            let imageData = photo.image.tiffRepresentation
+        #else
+            let imageData = photo.image.jpegData(compressionQuality: 1)
+        #endif
         content.append(imageData!)
         content.append(string: "\n--\(uploadId)--\n\n")
-        
-        let header = ["Content-Type": "multipart/form-data; boundary=\"\(uploadId)\""]
-        
-        guard let httpHelper = HandlerSettings.shared.httpHelper else {return}
-        httpHelper.sendAsync(method: .post, url: try URLs.getUploadPhotoUrl(), body: [:], header: header, data: content) { [weak self] (data, response, error) in
-            if let error = error {
-                completion(Return.fail(error: error, response: .fail, value: nil))
-            } else {
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let uploadRes = try decoder.decode(UploadPhotoResponse.self, from: data)
-                        if uploadRes.status! == "ok" {
-                            self!.configureStoryPhoto(uploadId: uploadRes.uploadId!, caption: photo.caption, completion: { (result) in
-                                completion(Return.success(value: result))
-                            })
-                        }
-                    } catch {
-                        completion(Return.fail(error: error, response: .ok, value: nil))
-                    }
-                }
-            }
+        let headers = ["Content-Type": "multipart/form-data; boundary=\"\(uploadId)\""]
+
+        requests.decodeAsync(UploadPhotoResponse.self,
+                             method: .post,
+                             url: URLs.getUploadPhotoUrl(),
+                             body: .data(content),
+                             headers: headers,
+                             deliverOnResponseQueue: false) { [weak self] in
+                                guard let me = self, let handler = me.handler else {
+                                    return completionHandler(.failure(CustomErrors.weakReferenceReleased))
+                                }
+                                switch $0 {
+                                case .failure(let error):
+                                    handler.settings.queues.response.async {
+                                        completionHandler(.failure(error))
+                                    }
+                                case .success(let decoded):
+                                    guard decoded.status == "ok" else {
+                                        return handler.settings.queues.response.async {
+                                            completionHandler(.failure(CustomErrors.noError))
+                                        }
+                                    }
+                                    me.configure(photo: photo,
+                                                 with: uploadId,
+                                                 caption: photo.caption,
+                                                 completionHandler: completionHandler)
+                                }
         }
     }
-    
-    fileprivate func configureStoryPhoto(uploadId: String, caption: String, completion: @escaping (UploadPhotoResponse?) -> ()) {
-        
-        guard
-            let device = HandlerSettings.shared.device,
-            let pk = HandlerSettings.shared.user?.loggedInUser.pk,
-            let csrfToken = HandlerSettings.shared.user?.csrfToken
-        else {return}
-        
-        let data = ConfigureStoryUploadModel.init(_uuid: device.deviceGuid.uuidString, _uid: String(pk), _csrftoken: csrfToken, source_type: "1", caption: caption, upload_id: uploadId, disable_comments: false, configure_mode: 1, campera_position: "unknown")
-        
+
+    // Set up photo.
+    func configure(photo: InstaPhoto,
+                   with uploadId: String,
+                   caption: String,
+                   completionHandler: @escaping (Result<UploadPhotoResponse, Error>) -> Void) {
+        guard let storage = handler.response?.cache?.storage else {
+            return completionHandler(.failure(CustomErrors.runTimeError("Invalid `SessionCache` in `APIHandler.respone`. Log in again.")))
+        }
+        // prepare body.
+        let data = ConfigureStoryUploadModel.init(uuid: handler!.settings.device.deviceGuid.uuidString,
+                                                  uid: storage.dsUserId,
+                                                  csrfToken: storage.csrfToken,
+                                                  sourceType: "1",
+                                                  caption: caption,
+                                                  uploadId: uploadId,
+                                                  disableComments: false,
+                                                  configureMode: 1,
+                                                  cameraPosition: "unknown")
+
         let encoder = JSONEncoder()
-        let payload = String(data: try! encoder.encode(data), encoding: .utf8)!
-        let hash = payload.hmac(algorithm: .SHA256, key: Headers.HeaderIGSignatureValue)
-        // Creating Post Request Body
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        guard let payload = try? String(data: encoder.encode(data), encoding: .utf8) else {
+            return completionHandler(.failure(CustomErrors.runTimeError("Invalid request.")))
+        }
+        let hash = payload.hmac(algorithm: .SHA256, key: Headers.igSignatureValue)
+
         let signature = "\(hash).\(payload)"
         let body: [String: Any] = [
-            Headers.HeaderIGSignatureKey: signature.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!,
-            Headers.HeaderIGSignatureVersionKey: Headers.HeaderIGSignatureVersionValue
+            Headers.igSignatureKey: signature.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!,
+            Headers.igSignatureVersionKey: Headers.igSignatureVersionValue
         ]
-        
-        guard let httpHelper = HandlerSettings.shared.httpHelper else {return}
-        httpHelper.sendAsync(method: .post, url: try! URLs.getConfigureStoryUrl(), body: body, header: [:]) { (data, response, error) in
-            if error != nil {
-                completion(nil)
-            } else {
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let value = try decoder.decode(UploadPhotoResponse.self, from: data)
-                        completion(value)
-                    } catch {
-                        completion(nil)
-                    }
+
+        requests.decodeAsync(UploadPhotoResponse.self,
+                             method: .post,
+                             url: URLs.getConfigureStoryUrl(),
+                             body: .parameters(body),
+                             completionHandler: completionHandler)
+    }
+
+    /// Get story viewers.
+    public func viewers(forStory storyId: String, 
+                        with paginationParameters: PaginationParameters,
+                        updateHandler: PaginationUpdateHandler<StoryViewers>?,
+                        completionHandler: @escaping PaginationCompletionHandler<StoryViewers>) {
+        pages.fetch(StoryViewers.self,
+                    with: paginationParameters,
+                    at: { URLs.getStoryViewersUrl(pk: storyId, maxId: $0.nextMaxId ?? "") },
+                    updateHandler: updateHandler,
+                    completionHandler: completionHandler)
+    }
+
+    /// Get highlights.
+    public func highlightsBy(user: UserReference, completionHandler: @escaping (Result<StoryHighlights, Error>) -> Void) {
+        switch user {
+        case .username:
+            // fetch username.
+            self.handler.users.user(user) { [weak self] in
+                guard let handler = self else {
+                    return completionHandler(.failure(CustomErrors.weakReferenceReleased))
+                }
+                switch $0 {
+                case .success(let user) where user?.pk != nil:
+                    handler.highlightsBy(user: .pk(user!.pk!), completionHandler: completionHandler)
+                case .failure(let error): completionHandler(.failure(error))
+                default: completionHandler(.failure(CustomErrors.runTimeError("No user matching `username`.")))
                 }
             }
+        case .pk(let pk):
+            // load stories directly.
+            requests.decodeAsync(StoryHighlights.self,
+                                 method: .get,
+                                 url: URLs.getStoryHighlightsUrl(userPk: pk),
+                                 completionHandler: completionHandler)
         }
     }
-    
-    func getStoryViewers(storyPk: String,
-                         paginationParameters: PaginationParameters,
-                         updateHandler: PaginationResponse<StoryViewers>?,
-                         completionHandler: @escaping PaginationResponse<Result<[StoryViewers]>>) throws {
-        PaginationHandler.getPages(StoryViewers.self,
-                                   for: paginationParameters,
-                                   at: { try URLs.getStoryViewersUrl(pk: storyPk, maxId: $0.nextMaxId ?? "") },
-                                   updateHandler: updateHandler,
-                                   completionHandler: completionHandler)
-    }
-    
-    func getStoryHighlights(userPk: Int, completion: @escaping (Result<StoryHighlights>) -> ()) throws {
-        guard let httpHelper = HandlerSettings.shared.httpHelper else {return}
-        httpHelper.sendAsync(method: .get, url: try URLs.getStoryHighlightsUrl(userPk: userPk), body: [:], header: [:]) { (data, res, error) in
-            if let error = error {
-                completion(Return.fail(error: error, response: .fail, value: nil))
-            } else {
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let value = try decoder.decode(StoryHighlights.self, from: data)
-                        completion(Return.success(value: value))
-                    } catch {
-                        completion(Return.fail(error: error, response: .ok, value: nil))
-                    }
-                }
+
+    /// Mark stories as seen.
+    public func mark(stories: [TrayItems],
+                     with sourceId: String?,
+                     asSeen seen: Bool,
+                     completionHandler: @escaping (Result<BaseStatusResponseModel, Error>) -> Void) {
+        guard let storage = handler.response?.cache?.storage else {
+            return completionHandler(.failure(CustomErrors.runTimeError("Invalid `SessionCache` in `APIHandler.respone`. Log in again.")))
+        }
+        guard seen else {
+            return handler!.settings.queues.response.async {
+                completionHandler(.failure(CustomErrors.runTimeError("You cannot \"unsee\" stories.")))
             }
         }
-    }
-    
-    func markStoriesAsSeen(items: [TrayItems], sourceId: String?, completion: @escaping (Result<Bool>) -> ()) throws {
+
         var reels: [String: [String]] = [:]
         let maxSeenAt = Int(Date().timeIntervalSince1970)
-        var seenAt = Int(maxSeenAt) - (3 * items.count)
-        
-        for item in items {
+        var seenAt = Int(maxSeenAt) - (3 * stories.count)
+
+        for item in stories {
             let takenAt = item.takenAt!
             if seenAt < takenAt {
                 seenAt = takenAt + 2
             }
-            
             if seenAt > maxSeenAt {
                 seenAt = maxSeenAt
             }
-            
             let itemSourceId = (sourceId == nil) ? String(item.user!.pk!): sourceId!
             let reelId = String(item.id!) + "_" + itemSourceId
             reels[reelId] = [String(takenAt) + "_" + String(seenAt)]
             seenAt += Int.random(in: 1...3)
         }
-        
-        guard
-            let device = HandlerSettings.shared.device,
-            let pk = HandlerSettings.shared.user?.loggedInUser.pk,
-            let csrfToken = HandlerSettings.shared.user?.csrfToken
-        else {return}
-        let data  = SeenStory(_uuid: device.deviceGuid.uuidString, _uid: String(pk), _csrftoken: csrfToken, container_module: "feed_timeline", reels: reels, reel_media_skipped: [:], live_vods: [:], live_vods_skipped: [:], nuxes: [:], nuxes_skipped: [:])
-        
+        let data  = SeenStory(uuid: handler!.settings.device.deviceGuid.uuidString,
+                              uid: storage.dsUserId,
+                              csrfToken: storage.csrfToken,
+                              containerModule: "feed_timeline",
+                              reels: reels,
+                              reelMediaSkipped: [:],
+                              liveVods: [:],
+                              liveVodsSkipped: [:],
+                              nuxes: [:],
+                              nuxesSkipped: [:])
+
         let encoder = JSONEncoder()
-        let payload = String(data: try! encoder.encode(data), encoding: .utf8)!
-        let hash = payload.hmac(algorithm: .SHA256, key: Headers.HeaderIGSignatureValue)
-        
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        guard let payload = try? String(data: encoder.encode(data), encoding: .utf8) else {
+            return completionHandler(.failure(CustomErrors.runTimeError("Invalid request.")))
+        }
+        let hash = payload.hmac(algorithm: .SHA256, key: Headers.igSignatureValue)
+
         let signature = "\(hash).\(payload)"
         let body: [String: Any] = [
-            Headers.HeaderIGSignatureKey: signature.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!,
-            Headers.HeaderIGSignatureVersionKey: Headers.HeaderIGSignatureVersionValue
+            Headers.igSignatureKey: signature.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!,
+            Headers.igSignatureVersionKey: Headers.igSignatureVersionValue
         ]
-        
-        // api version 2
-        let url = URLs.markStoriesAsSeenUrl()
-        guard let httpHelper = HandlerSettings.shared.httpHelper else {return}
-        httpHelper.sendAsync(method: .post, url: url, body: body, header: [:]) { (data, res, err) in
-            if let err = err {
-                completion(Return.fail(error: err, response: .fail, value: false))
-            } else {
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let value = try decoder.decode(BaseStatusResponseModel.self, from: data)
-                        if let status = value.status, status == "ok" {
-                            completion(Return.success(value: true))
-                        } else {
-                            completion(Return.fail(error: nil, response: .fail, value: false))
-                        }
-                    } catch {
-                        completion(Return.fail(error: err, response: .ok, value: false))
-                    }
-                }
-            }
-        }
+
+        requests.decodeAsync(BaseStatusResponseModel.self,
+                             method: .post,
+                             url: URLs.markStoriesAsSeenUrl(),
+                             body: .parameters(body),
+                             completionHandler: completionHandler)
     }
-    
-    func getReelsMediaFeed(feedList: [String], completion: @escaping (Result<StoryReelsFeedModel>, Data?) -> ()) throws {
-        let url = try URLs.getReelsMediaFeed()
-        guard let httpHelper = HandlerSettings.shared.httpHelper else { return }
-        guard let user = HandlerSettings.shared.user else { return }
-        guard let device = HandlerSettings.shared.device else { return }
-        
-        let data = RequestReelsMediaFeed(supported_capabilities_new: SupportedCapability.generate(), _uuid: device.deviceGuid.uuidString, _uid: String(user.loggedInUser.pk!), _csrftoken: user.csrfToken, user_ids: feedList, source: "feed_timeline")
-        
+
+    /// Get reels media feed.
+    public func reelsMedia(_ feeds: [String], completionHandler: @escaping (Result<StoryReelsFeedModel, Error>) -> Void) {
+        guard let storage = handler.response?.cache?.storage else {
+            return completionHandler(.failure(CustomErrors.runTimeError("Invalid `SessionCache` in `APIHandler.respone`. Log in again.")))
+        }
+        let data = RequestReelsMediaFeed(supportedCapabilitiesNew: SupportedCapability.generate(),
+                                         uuid: handler!.settings.device.deviceGuid.uuidString,
+                                         uid: storage.dsUserId,
+                                         csrfToken: storage.csrfToken,
+                                         userIds: feeds,
+                                         source: "feed_timeline")
+
         let encoder = JSONEncoder()
-        let payload = String(data: try! encoder.encode(data), encoding: .utf8)!
-        let hash = payload.hmac(algorithm: .SHA256, key: Headers.HeaderIGSignatureValue)
-        
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        guard let payload = try? String(data: encoder.encode(data), encoding: .utf8) else {
+            return completionHandler(.failure(CustomErrors.runTimeError("Invalid request.")))
+        }
+        let hash = payload.hmac(algorithm: .SHA256, key: Headers.igSignatureValue)
+
         let signature = "\(hash).\(payload)"
         let body: [String: Any] = [
-            Headers.HeaderIGSignatureKey: signature.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!,
-            Headers.HeaderIGSignatureVersionKey: Headers.HeaderIGSignatureVersionValue
+            Headers.igSignatureKey: signature.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!,
+            Headers.igSignatureVersionKey: Headers.igSignatureVersionValue
         ]
-        
-        httpHelper.sendAsync(method: .post, url: url, body: body, header: [:]) { (data, res, error) in
-            if let error = error {
-                completion(Return.fail(error: error, response: .fail, value: nil), nil)
-            } else {
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let value = try decoder.decode(StoryReelsFeedModel.self, from: data)
-                        completion(Return.success(value: value), data)
-                    } catch {
-                        completion(Return.fail(error: error, response: .ok, value: nil), nil)
-                    }
-                }
-            }
-        }
+
+        requests.decodeAsync(StoryReelsFeedModel.self,
+                             method: .post,
+                             url: URLs.getReelsMediaFeed(),
+                             body: .parameters(body),
+                             completionHandler: completionHandler)
     }
-    
-    func getStoryArchive(completion: @escaping (Result<StoryArchiveFeedModel>) -> ()) throws {
-        HandlerSettings.shared.httpHelper!.sendAsync(method: .get, url: try URLs.getStoryArchiveUrl(), body: [:], header: [:]) { (data, response, error) in
-            if let error = error {
-                completion(Return.fail(error: error, response: .fail, value: nil))
-            } else {
-                if let data = data {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    do {
-                        let value = try decoder.decode(StoryArchiveFeedModel.self, from: data)
-                        completion(Return.success(value: value))
-                    } catch {
-                        completion(Return.fail(error: error, response: .ok, value: nil))
-                    }
-                } else {
-                    let error = CustomErrors.unExpected("The data couldn’t be read because it is missing error when decoding JSON.")
-                    completion(Return.fail(error: error, response: .ok, value: nil))
-                }
-            }
-        }
+
+    func archive(completionHandler: @escaping (Result<StoryArchiveFeedModel, Error>) -> Void) {
+        requests.decodeAsync(StoryArchiveFeedModel.self,
+                             method: .get,
+                             url: URLs.getStoryArchiveUrl(),
+                             completionHandler: completionHandler)
     }
 }

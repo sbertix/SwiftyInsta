@@ -8,9 +8,10 @@
 
 import Foundation
 import CommonCrypto
+
 enum CryptoAlgorithm {
     case MD5, SHA1, SHA224, SHA256, SHA384, SHA512
-    
+
     var HMACAlgorithm: CCHmacAlgorithm {
         var result: Int = 0
         switch self {
@@ -23,7 +24,7 @@ enum CryptoAlgorithm {
         }
         return CCHmacAlgorithm(result)
     }
-    
+
     var digestLength: Int {
         var result: Int32 = 0
         switch self {
@@ -39,7 +40,7 @@ enum CryptoAlgorithm {
 }
 
 extension String {
-    
+
     func hmac(algorithm: CryptoAlgorithm, key: String) -> String {
         let str = self.cString(using: String.Encoding.utf8)
         let strLen = Int(self.lengthOfBytes(using: String.Encoding.utf8))
@@ -47,16 +48,16 @@ extension String {
         let result = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: digestLen)
         let keyStr = key.cString(using: String.Encoding.utf8)
         let keyLen = Int(key.lengthOfBytes(using: String.Encoding.utf8))
-        
+
         CCHmac(algorithm.HMACAlgorithm, keyStr!, keyLen, str!, strLen, result)
-        
+
         let digest = stringFromResult(result: result, length: digestLen)
-        
+
         //result.deallocate(capacity: digestLen)
         result.deallocate()
         return digest
     }
-    
+
     private func stringFromResult(result: UnsafeMutablePointer<CUnsignedChar>, length: Int) -> String {
         let hash = NSMutableString()
         for i in 0..<length {
@@ -64,21 +65,21 @@ extension String {
         }
         return String(hash)
     }
-    
+
 }
 
-extension String{
-    var MD5:String {
-        get{
-            let messageData = self.data(using:.utf8)!
+extension String {
+    var MD5: String {
+        get {
+            let messageData = self.data(using: .utf8)!
             var digestData = Data(count: Int(CC_MD5_DIGEST_LENGTH))
-            
-            _ = digestData.withUnsafeMutableBytes {digestBytes in
-                messageData.withUnsafeBytes {messageBytes in
-                    CC_MD5(messageBytes, CC_LONG(messageData.count), digestBytes)
+
+            _ = digestData.withUnsafeMutableBytes { digestBytes in
+                messageData.withUnsafeBytes { messageBytes in
+                    CC_MD5(messageBytes.baseAddress, CC_LONG(messageData.count), digestBytes.bindMemory(to: UInt8.self).baseAddress)
                 }
             }
-            
+
             return digestData.map { String(format: "%02hhx", $0) }.joined()
         }
     }

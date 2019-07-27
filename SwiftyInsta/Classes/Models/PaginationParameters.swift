@@ -3,6 +3,7 @@
 //  SwiftyInsta
 //
 //  Modified by Stefano Bertagno on 11/3/18.
+//  V. 2.0 by Stefano Bertagno on 7/21/19.
 //  Copyright © 2018 Mahdi. All rights reserved.
 //
 
@@ -15,10 +16,10 @@ public class PaginationParameters {
     public var loadedPages: Int = 0
     /// The next `maxId`. Defaults to `nil`.
     public var nextMaxId: String?
-    
+
     /// Whether there's something left to load.
     public var canLoadMore: Bool { return loadedPages < maxPagesToLoad }
-        
+
     // MARK: Init
     public init(startingAt maxId: String? = nil, maxPagesToLoad: Int = 1) {
         precondition(maxPagesToLoad > 0, "`maxPagesToLoad` must be bigger than `0`.")
@@ -26,12 +27,10 @@ public class PaginationParameters {
         self.maxPagesToLoad = maxPagesToLoad
     }
     public static let everything = PaginationParameters(startingAt: nil, maxPagesToLoad: .max)
-        
+
     // MARK: Obsolete
     @available(*, unavailable, message: "use `init` instead.")
     public static func maxPagesToLoad(maxPages: Int) -> PaginationParameters {
         fatalError("`maxPagesToLoad(maxPages:)` was removed.")
     }
 }
-
-public typealias PaginationResponse<R> = (_ response: R, _ parameters: PaginationParameters) -> Void
