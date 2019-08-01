@@ -10,13 +10,11 @@ import Foundation
 
 /// A `protocol` holding reference to endpoint responses.
 public protocol ParsedResponse {
-    /// The associated `JSON` response type.
-    associatedtype RawResponse: Codable & Hashable
     /// The associated `JSON` response.
-    var rawResponse: RawResponse { get }
+    var rawResponse: DynamicResponse { get }
 
     /// Init with `rawResponse`.
-    init(_ rawResponse: RawResponse)
+    init(rawResponse: DynamicResponse)
 }
 
 /// The identifier type.
