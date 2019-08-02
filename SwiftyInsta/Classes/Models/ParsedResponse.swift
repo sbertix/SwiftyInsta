@@ -65,6 +65,6 @@ public extension IdentifiableParsedResponse {
     /// The identifier.
     var identity: Identifier<Self> {
         .init(primaryKey: rawResponse.pk.int ?? rawResponse.pk.string.flatMap(Int.init),
-              identifier: rawResponse.id.string ?? "")
+              identifier: rawResponse.id.string ?? rawResponse.id.int.flatMap(String.init))
     }
 }
