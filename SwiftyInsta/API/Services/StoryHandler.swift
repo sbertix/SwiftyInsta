@@ -11,16 +11,9 @@ import CryptoSwift
 import Foundation
 
 public class StoryHandler: Handler {
-    public func testTray(completionHandler: @escaping(Result<Tray, Error>) -> Void) {
-        requests.parse(Tray.self,
-                       method: .get,
-                       url: Result { try URLs.getStoryFeedUrl() },
-                       completionHandler: completionHandler)
-    }
-    
     /// Get the story feed.
-    public func tray(completionHandler: @escaping (Result<StoryFeedModel, Error>) -> Void) {
-        requests.decode(StoryFeedModel.self,
+    public func tray(completionHandler: @escaping (Result<Tray, Error>) -> Void) {
+        requests.parse(Tray.self,
                         method: .get,
                         url: Result { try URLs.getStoryFeedUrl() },
                         completionHandler: completionHandler)

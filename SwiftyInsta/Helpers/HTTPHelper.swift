@@ -36,7 +36,7 @@ class HTTPHelper {
     init(handler: APIHandler) {
         self.handler = handler
     }
-    
+
     /// Parse accessory.
     func parse<R>(_ type: R.Type,
                   method: Method,

@@ -2,7 +2,8 @@
 //  DynamicResponse.swift
 //  SwiftyInsta
 //
-//  Created by Stefano Bertagno on 08/02/2019.
+//  Created by Stefano Bertagno on 02/08/2019.
+//  Inspired by https://github.com/saoudrizwan/DynamicJSON.
 //  Copyright © 2019 Mahdi. All rights reserved.
 //
 

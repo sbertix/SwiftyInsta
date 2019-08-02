@@ -11,7 +11,7 @@ import CryptoSwift
 import Foundation
 
 /// **Instagram** accepted `Media`s.
-public enum Media: String {
+public enum MediaType: String {
     /// Image.
     case image = "1"
     /// Video.
@@ -581,7 +581,7 @@ public class MediaHandler: Handler {
 
     /// Delete media.
     public func delete(media mediaId: String,
-                       with type: Media,
+                       with type: MediaType,
                        completionHandler: @escaping (Result<DeleteMediaResponse, Error>) -> Void) {
         guard let storage = handler.response?.cache?.storage else {
             return completionHandler(.failure(GenericError.custom("Invalid `SessionCache` in `APIHandler.respone`. Log in again.")))

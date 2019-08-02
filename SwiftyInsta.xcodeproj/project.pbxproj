@@ -288,6 +288,14 @@
 		E0B9940422F3A8450036BFA5 /* StoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9940222F3A8450036BFA5 /* StoryResponse.swift */; };
 		E0B9940522F3A8450036BFA5 /* StoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9940222F3A8450036BFA5 /* StoryResponse.swift */; };
 		E0B9940622F3A8450036BFA5 /* StoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9940222F3A8450036BFA5 /* StoryResponse.swift */; };
+		E0B9940922F3B7DB0036BFA5 /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9940822F3B7DB0036BFA5 /* UserResponse.swift */; };
+		E0B9940A22F3B7DB0036BFA5 /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9940822F3B7DB0036BFA5 /* UserResponse.swift */; };
+		E0B9940B22F3B7DB0036BFA5 /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9940822F3B7DB0036BFA5 /* UserResponse.swift */; };
+		E0B9940C22F3B7DB0036BFA5 /* UserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9940822F3B7DB0036BFA5 /* UserResponse.swift */; };
+		E0B9940E22F3BF8B0036BFA5 /* MediaResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9940D22F3BF8B0036BFA5 /* MediaResponse.swift */; };
+		E0B9940F22F3BF8B0036BFA5 /* MediaResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9940D22F3BF8B0036BFA5 /* MediaResponse.swift */; };
+		E0B9941022F3BF8B0036BFA5 /* MediaResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9940D22F3BF8B0036BFA5 /* MediaResponse.swift */; };
+		E0B9941122F3BF8B0036BFA5 /* MediaResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9940D22F3BF8B0036BFA5 /* MediaResponse.swift */; };
 		E0F2355022E9A89A0039F5A6 /* PermalinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1141BDA022E85AD800D987FF /* PermalinkModel.swift */; };
 		E0F2355122E9A89A0039F5A6 /* PermalinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1141BDA022E85AD800D987FF /* PermalinkModel.swift */; };
 		E0F2355222E9A8A00039F5A6 /* PermalinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1141BDA022E85AD800D987FF /* PermalinkModel.swift */; };
@@ -387,6 +395,8 @@
 		E08C1DA722F0B39A003A8BA8 /* ParsedResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedResponse.swift; sourceTree = "<group>"; };
 		E0B993FD22F398860036BFA5 /* DynamicResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicResponse.swift; sourceTree = "<group>"; };
 		E0B9940222F3A8450036BFA5 /* StoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryResponse.swift; sourceTree = "<group>"; };
+		E0B9940822F3B7DB0036BFA5 /* UserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResponse.swift; sourceTree = "<group>"; };
+		E0B9940D22F3BF8B0036BFA5 /* MediaResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaResponse.swift; sourceTree = "<group>"; };
 		E8314D5D2210652400D13BEA /* UserTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTags.swift; sourceTree = "<group>"; };
 		E9497D8DD2D1B4C4F52B1DC5 /* Pods-SwiftyInsta.iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftyInsta.iOS.release.xcconfig"; path = "Target Support Files/Pods-SwiftyInsta.iOS/Pods-SwiftyInsta.iOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -511,51 +521,9 @@
 				E0B993FD22F398860036BFA5 /* DynamicResponse.swift */,
 				E08C1DA722F0B39A003A8BA8 /* ParsedResponse.swift */,
 				E0B9940222F3A8450036BFA5 /* StoryResponse.swift */,
-				11F0CE6A2195CC2400C0F6A4 /* TimelineModel.swift */,
-				112022972188AACF00CA58BA /* StatusResponse.swift */,
-				11B9568721945FD4006661A6 /* CaptionModel.swift */,
-				114B84852187200500F84161 /* ChallengeModel.swift */,
-				11905DFC2191C2C100FF297A /* CurrentUserModel.swift */,
-				11B95673219453B7006661A6 /* ExploreFeedItemModel.swift */,
-				11B9567121944F70006661A6 /* ExploreFeedModel.swift */,
-				11B9567B219454B9006661A6 /* ExploreItemInfoModel.swift */,
-				11848603218A1F460067FFD6 /* FriendshipStatusModel.swift */,
-				11B9568321945C67006661A6 /* LocationModel.swift */,
-				114B847F21871D1300F84161 /* LoginBaseResponseModel.swift */,
-				11723A582187C23400968DA5 /* LoginResponseModel.swift */,
-				1171E47721812C9400579B04 /* LoginResultModel.swift */,
-				11B9567921945494006661A6 /* MediaModel.swift */,
-				11848605218A21DA0067FFD6 /* NameTagModel.swift */,
-				11C106CE218DE9B20014D0E5 /* PaginationParameters.swift */,
-				114B848321871E9B00F84161 /* PhoneVerificationSettingsModel.swift */,
-				11905DFE2191C98600FF297A /* ProfilePicVersionsModel.swift */,
-				11848607218A23900067FFD6 /* SearchUserModel.swift */,
-				115F1252217FEFF200ED3530 /* SessionStorage.swift */,
-				11B956772194542D006661A6 /* StoryModel.swift */,
-				11B9567D21945500006661A6 /* TrayModel.swift */,
-				114B848121871E1500F84161 /* TwoFactorLoginInfoModel.swift */,
-				11848601218A1DDB0067FFD6 /* UserModel.swift */,
-				11E2B134218F13D20095374A /* UserShortListModel.swift */,
-				115F1254217FF0E300ED3530 /* UserShortModel.swift */,
-				11B9568521945F09006661A6 /* VideoVersionModel.swift */,
-				117E65A121962ED5004626CC /* UserFeedModel.swift */,
-				1131A45321974F9D00497992 /* TagFeedModel.swift */,
-				110C9D9721989F5800805C68 /* RecentActivitiesModel.swift */,
-				112C1FCF21998AEC00A698D5 /* DirectInboxModel.swift */,
-				11BF2FA1219A07400095D594 /* RecentRecipientsModel.swift */,
-				11C439D3219A429B00467381 /* ProfilePrivacyResponseModel.swift */,
-				11C487F7219B2A3B00E952A1 /* UserInfoModel.swift */,
-				1135EA5F219B5C2D00DCB739 /* CommentModel.swift */,
-				11B8518E219F5208009527CD /* UploadMediaModel.swift */,
-				11D2AE0921A02023007D7F1F /* CreateAccountModel.swift */,
-				115CA6DE21B0214800769B00 /* EditProfileModel.swift */,
-				116B149E21DEB64B00953A71 /* SessionCache.swift */,
-				1177ACA621F34BE1008A0C4C /* MediaLikersModel.swift */,
-				E8314D5D2210652400D13BEA /* UserTags.swift */,
-				110454D4221DE7270080F986 /* AccountRecovery.swift */,
-				11F57CC3229D2E78001A1C0A /* BlockedUsersModel.swift */,
-				1165DF9E22DB53B200D87D15 /* RequestReelsMediaFeed.swift */,
-				1141BDA022E85AD800D987FF /* PermalinkModel.swift */,
+				E0B9940D22F3BF8B0036BFA5 /* MediaResponse.swift */,
+				E0B9940822F3B7DB0036BFA5 /* UserResponse.swift */,
+				E0B9940722F3B3EC0036BFA5 /* Former */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -623,6 +591,58 @@
 				DB5020B38908925381619EBD /* Pods_SwiftyInsta_watchOS.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E0B9940722F3B3EC0036BFA5 /* Former */ = {
+			isa = PBXGroup;
+			children = (
+				11B9567D21945500006661A6 /* TrayModel.swift */,
+				11B956772194542D006661A6 /* StoryModel.swift */,
+				11848601218A1DDB0067FFD6 /* UserModel.swift */,
+				11F0CE6A2195CC2400C0F6A4 /* TimelineModel.swift */,
+				112022972188AACF00CA58BA /* StatusResponse.swift */,
+				11B9568721945FD4006661A6 /* CaptionModel.swift */,
+				114B84852187200500F84161 /* ChallengeModel.swift */,
+				11905DFC2191C2C100FF297A /* CurrentUserModel.swift */,
+				11B95673219453B7006661A6 /* ExploreFeedItemModel.swift */,
+				11B9567121944F70006661A6 /* ExploreFeedModel.swift */,
+				11B9567B219454B9006661A6 /* ExploreItemInfoModel.swift */,
+				11848603218A1F460067FFD6 /* FriendshipStatusModel.swift */,
+				11B9568321945C67006661A6 /* LocationModel.swift */,
+				114B847F21871D1300F84161 /* LoginBaseResponseModel.swift */,
+				11723A582187C23400968DA5 /* LoginResponseModel.swift */,
+				1171E47721812C9400579B04 /* LoginResultModel.swift */,
+				11B9567921945494006661A6 /* MediaModel.swift */,
+				11848605218A21DA0067FFD6 /* NameTagModel.swift */,
+				11C106CE218DE9B20014D0E5 /* PaginationParameters.swift */,
+				114B848321871E9B00F84161 /* PhoneVerificationSettingsModel.swift */,
+				11905DFE2191C98600FF297A /* ProfilePicVersionsModel.swift */,
+				11848607218A23900067FFD6 /* SearchUserModel.swift */,
+				115F1252217FEFF200ED3530 /* SessionStorage.swift */,
+				114B848121871E1500F84161 /* TwoFactorLoginInfoModel.swift */,
+				11E2B134218F13D20095374A /* UserShortListModel.swift */,
+				115F1254217FF0E300ED3530 /* UserShortModel.swift */,
+				11B9568521945F09006661A6 /* VideoVersionModel.swift */,
+				117E65A121962ED5004626CC /* UserFeedModel.swift */,
+				1131A45321974F9D00497992 /* TagFeedModel.swift */,
+				110C9D9721989F5800805C68 /* RecentActivitiesModel.swift */,
+				112C1FCF21998AEC00A698D5 /* DirectInboxModel.swift */,
+				11BF2FA1219A07400095D594 /* RecentRecipientsModel.swift */,
+				11C439D3219A429B00467381 /* ProfilePrivacyResponseModel.swift */,
+				11C487F7219B2A3B00E952A1 /* UserInfoModel.swift */,
+				1135EA5F219B5C2D00DCB739 /* CommentModel.swift */,
+				11B8518E219F5208009527CD /* UploadMediaModel.swift */,
+				11D2AE0921A02023007D7F1F /* CreateAccountModel.swift */,
+				115CA6DE21B0214800769B00 /* EditProfileModel.swift */,
+				116B149E21DEB64B00953A71 /* SessionCache.swift */,
+				1177ACA621F34BE1008A0C4C /* MediaLikersModel.swift */,
+				E8314D5D2210652400D13BEA /* UserTags.swift */,
+				110454D4221DE7270080F986 /* AccountRecovery.swift */,
+				11F57CC3229D2E78001A1C0A /* BlockedUsersModel.swift */,
+				1165DF9E22DB53B200D87D15 /* RequestReelsMediaFeed.swift */,
+				1141BDA022E85AD800D987FF /* PermalinkModel.swift */,
+			);
+			path = Former;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -937,6 +957,7 @@
 				1141BDA122E85AD800D987FF /* PermalinkModel.swift in Sources */,
 				E0F49BA522E505CF004C3E7F /* StoryHandler.swift in Sources */,
 				11C487F8219B2A3B00E952A1 /* UserInfoModel.swift in Sources */,
+				E0B9940E22F3BF8B0036BFA5 /* MediaResponse.swift in Sources */,
 				11F57CC4229D2E78001A1C0A /* BlockedUsersModel.swift in Sources */,
 				E076015922F1988500F8961F /* DeviceCollection.swift in Sources */,
 				11905DFD2191C2C100FF297A /* CurrentUserModel.swift in Sources */,
@@ -979,6 +1000,7 @@
 				11B9567A21945494006661A6 /* MediaModel.swift in Sources */,
 				E0F49BA222E4A53D004C3E7F /* UserHandler.swift in Sources */,
 				11848602218A1DDB0067FFD6 /* UserModel.swift in Sources */,
+				E0B9940922F3B7DB0036BFA5 /* UserResponse.swift in Sources */,
 				11B95674219453B7006661A6 /* ExploreFeedItemModel.swift in Sources */,
 				E07EBC8B22E74DDA0031647F /* AuthenticationHandler.swift in Sources */,
 				11848606218A21DA0067FFD6 /* NameTagModel.swift in Sources */,
@@ -1014,6 +1036,7 @@
 				E006E3F522E87EFE002DB4BB /* UserHandler.swift in Sources */,
 				E006E42922E87EFE002DB4BB /* UploadMediaModel.swift in Sources */,
 				E006E43422E87EFE002DB4BB /* PaginationHelper.swift in Sources */,
+				E0B9940A22F3B7DB0036BFA5 /* UserResponse.swift in Sources */,
 				E0F2355022E9A89A0039F5A6 /* PermalinkModel.swift in Sources */,
 				E006E42E22E87EFE002DB4BB /* UserTags.swift in Sources */,
 				E006E41222E87EFE002DB4BB /* NameTagModel.swift in Sources */,
@@ -1068,6 +1091,7 @@
 				E006E3EF22E87EFE002DB4BB /* APIHandler.swift in Sources */,
 				E006E43022E87EFE002DB4BB /* AccountRecovery.swift in Sources */,
 				E006E3F422E87EFE002DB4BB /* ProfileHandler.swift in Sources */,
+				E0B9940F22F3BF8B0036BFA5 /* MediaResponse.swift in Sources */,
 				E006E40622E87EFE002DB4BB /* ChallengeModel.swift in Sources */,
 				E076015F22F198B900F8961F /* Brand.swift in Sources */,
 				E006E41522E87EFE002DB4BB /* ProfilePicVersionsModel.swift in Sources */,
@@ -1088,6 +1112,7 @@
 				E006E44222E87EFF002DB4BB /* UserHandler.swift in Sources */,
 				E006E47622E87EFF002DB4BB /* UploadMediaModel.swift in Sources */,
 				E006E48122E87EFF002DB4BB /* PaginationHelper.swift in Sources */,
+				E0B9940B22F3B7DB0036BFA5 /* UserResponse.swift in Sources */,
 				E0F2355122E9A89A0039F5A6 /* PermalinkModel.swift in Sources */,
 				E006E47B22E87EFF002DB4BB /* UserTags.swift in Sources */,
 				E006E45F22E87EFF002DB4BB /* NameTagModel.swift in Sources */,
@@ -1142,6 +1167,7 @@
 				E006E43C22E87EFF002DB4BB /* APIHandler.swift in Sources */,
 				E006E47D22E87EFF002DB4BB /* AccountRecovery.swift in Sources */,
 				E006E44122E87EFF002DB4BB /* ProfileHandler.swift in Sources */,
+				E0B9941022F3BF8B0036BFA5 /* MediaResponse.swift in Sources */,
 				E006E45322E87EFF002DB4BB /* ChallengeModel.swift in Sources */,
 				E076016022F198B900F8961F /* Brand.swift in Sources */,
 				E006E46222E87EFF002DB4BB /* ProfilePicVersionsModel.swift in Sources */,
@@ -1162,6 +1188,7 @@
 				E006E48F22E87F00002DB4BB /* UserHandler.swift in Sources */,
 				E006E4C322E87F00002DB4BB /* UploadMediaModel.swift in Sources */,
 				E006E4CE22E87F00002DB4BB /* PaginationHelper.swift in Sources */,
+				E0B9940C22F3B7DB0036BFA5 /* UserResponse.swift in Sources */,
 				E0F2355222E9A8A00039F5A6 /* PermalinkModel.swift in Sources */,
 				E006E4C822E87F00002DB4BB /* UserTags.swift in Sources */,
 				E006E4AC22E87F00002DB4BB /* NameTagModel.swift in Sources */,
@@ -1216,6 +1243,7 @@
 				E006E48922E87F00002DB4BB /* APIHandler.swift in Sources */,
 				E006E4CA22E87F00002DB4BB /* AccountRecovery.swift in Sources */,
 				E006E48E22E87F00002DB4BB /* ProfileHandler.swift in Sources */,
+				E0B9941122F3BF8B0036BFA5 /* MediaResponse.swift in Sources */,
 				E006E4A022E87F00002DB4BB /* ChallengeModel.swift in Sources */,
 				E076016122F198B900F8961F /* Brand.swift in Sources */,
 				E006E4AF22E87F00002DB4BB /* ProfilePicVersionsModel.swift in Sources */,

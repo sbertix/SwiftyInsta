@@ -16,6 +16,17 @@ public protocol ParsedResponse {
     /// Init with `rawResponse`.
     init(rawResponse: DynamicResponse)
 }
+/// A pseudo-`Coding` extension.
+public extension ParsedResponse {
+    /// Encode.
+    func encode() throws -> Data {
+        return try rawResponse.data()
+    }
+    /// Decode.
+    static func decode(data: Data) throws -> Self {
+        return try Self(rawResponse: DynamicResponse(data: data))
+    }
+}
 
 /// The identifier type.
 /// Most of `Instagram` models for their responses, contain both a numerical `pk`, representing the _primaryKey_ (i.e. unique)
@@ -51,4 +62,9 @@ public protocol IdentifiableParsedResponse: ParsedResponse {
 public extension IdentifiableParsedResponse {
     /// The identifier type.
     typealias Identity = Identifier<Self>
+    /// The identifier.
+    var identity: Identifier<Self> {
+        .init(primaryKey: rawResponse.pk.int ?? rawResponse.pk.string.flatMap(Int.init),
+              identifier: rawResponse.id.string ?? "")
+    }
 }
