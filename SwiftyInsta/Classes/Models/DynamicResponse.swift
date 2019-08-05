@@ -2,7 +2,7 @@
 //  DynamicResponse.swift
 //  SwiftyInsta
 //
-//  Created by Stefano Bertagno on 02/08/2019.
+//  Created by Stefano Bertagno on 08/02/2019.
 //  Inspired by https://github.com/saoudrizwan/DynamicJSON.
 //  Copyright © 2019 Mahdi. All rights reserved.
 //
@@ -48,8 +48,8 @@ public enum DynamicResponse: Equatable {
     case none
 
     // MARK: Lifecycle
-    public init(data: Data,
-                options: JSONSerialization.ReadingOptions = .allowFragments) throws {
+    init(data: Data,
+         options: JSONSerialization.ReadingOptions = .allowFragments) throws {
         self = try DynamicResponse(JSONSerialization.jsonObject(with: data, options: options))
     }
 
@@ -82,7 +82,7 @@ public enum DynamicResponse: Equatable {
         }
     }
 
-    public func data(options: JSONSerialization.WritingOptions = []) throws -> Data {
+    func data(options: JSONSerialization.WritingOptions = []) throws -> Data {
         return try JSONSerialization.data(withJSONObject: any, options: options)
     }
 
@@ -146,6 +146,7 @@ public enum DynamicResponse: Equatable {
         switch self {
         case .url(let url): return url.absoluteString
         case .string(let string): return string
+        case .int(let int): return String(format: "%ld", int)
         default: return nil
         }
     }
@@ -176,7 +177,6 @@ public enum DynamicResponse: Equatable {
         return dictionary[key] ?? .none
     }
 }
-
 extension DynamicResponse: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: Any...) {
         self.init(elements)
